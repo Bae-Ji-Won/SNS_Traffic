@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.2'
+    id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.1.4'
+    id "com.github.node-gradle.node" version "3.3.0"            // node 추가
 }
 
 group = 'com.example'
@@ -23,7 +24,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
@@ -35,3 +36,38 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// ------------------ Front와 연동시키기 위한 설정 ------------------
+// node 사용을 위한 설정
+node {
+    nodeModulesDir = file("$projectDir/front-end")
+    version = '18.3.0'
+    download = true
+}
+
+// React npm 실행시키는 설정(해당 코드가 있어야 서버 실행시킬때 자동적으로 React도 동시에 실행됨)
+task npmBuild(type: NpmTask) {
+    args = ['run', "build"]
+}
+
+// Front End폴더 안에 static폴더 안에 있는 파일들을 서버 폴더로 카피해놓음
+task copyFrontEnd(type: Copy) {
+    from "$projectDir/front-end/static"
+    into 'build/resources/main/static/.'
+}
+
+// 프론트에서 클린이 일어날 때 서버에 있는 폴더안에 있는 자료들도 같이 삭제한다
+task cleanFrontEnd(type: Delete) {
+    delete "$projectDir/front-end/static", "$projectDir/front-end/node_modules"
+}
+
+// task를 체인으로 걸어둠
+// compileJava.dependsOn copyFrontEnd : 컴파일이 동작하기 전에 프론트에 있는 폴더를 카피한다
+// copyFrontEnd.dependsOn npmBuild : 폴더를 카피하기 전에 npm을 동작시킨다
+// npmBuild.dependsOn npmInstall : npm 동작하기 전에 npm을 다운로드 받는다.
+npmBuild.dependsOn npmInstall
+copyFrontEnd.dependsOn npmBuild
+compileJava.dependsOn copyFrontEnd
+
+// clean.dependsOn cleanFrontEnd : 클린 코드 동작하기 전에 FrontEnd에 있는 코드도 클린되어야 한다
+clean.dependsOn cleanFrontEnd
