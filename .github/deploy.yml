@@ -1,0 +1,27 @@
+# This is a basic workflow to help you get started with Actions
+# heroku 배포 시나리오 작성
+name: Deploy
+
+# main 브런치에 push가 될때 트리거가 실행됨
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # 기존의 heroku 배포 라이브러리 사용
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to Heroku
+        uses: AkhileshNS/heroku-deploy@v3.12.12
+        # 해당 라이브러리를 사용하기 위해 기본정보 입력
+        with:
+          # Github 설정에 등록한 api key 코드 이름 그대로 사용
+          heroku_api_key: ${{ secrets.HEROKU_DEPLOY_KEY }}
+          # Email that you use with heroku
+          heroku_email: qowhxk@naver.com
+          # The appname to use for deploying/updating
+          heroku_app_name: sns-traffic
