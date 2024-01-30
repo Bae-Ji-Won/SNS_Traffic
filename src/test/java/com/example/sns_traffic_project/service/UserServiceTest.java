@@ -1,6 +1,6 @@
 package com.example.sns_traffic_project.service;
 
-import com.example.sns_traffic_project.entity.User;
+import com.example.sns_traffic_project.domain.User;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.fixture.UserFixture;
 import com.example.sns_traffic_project.repository.UserRepository;
@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
