@@ -21,7 +21,7 @@ public class User extends AuditingFields{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "user_name", length = 100)
     private String userName;
@@ -40,11 +40,14 @@ public class User extends AuditingFields{
 
     }
 
-    private User(){
-
+    private User(String userName, String password){
+        this.userName = userName;
+        this.password = password;
+        this.createdBy = userName;
+        this.modifiedBy = userName;
     }
 
-    public static User of(){
-
+    public static User of(String userName, String password){
+        return new User(userName,password);
     }
 }
