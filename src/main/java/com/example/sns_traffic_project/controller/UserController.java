@@ -1,5 +1,6 @@
 package com.example.sns_traffic_project.controller;
 
+import com.example.sns_traffic_project.dto.UserDto;
 import com.example.sns_traffic_project.dto.request.UserJoinRequest;
 import com.example.sns_traffic_project.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class UserController {
 
     @PostMapping("/join")
     public void join(@RequestBody UserJoinRequest request){
-        userService.join(request.)
+        UserDto dto = userService.join(request.userName(),request.password());
 
     }
 }

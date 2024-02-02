@@ -2,6 +2,7 @@ package com.example.sns_traffic_project.service;
 
 
 import com.example.sns_traffic_project.domain.User;
+import com.example.sns_traffic_project.dto.UserDto;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +15,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     // Todo : implement
-    public User join(String userName, String pw) {
+    public UserDto join(String userName, String pw) {
         // 유저 이름을 통한 정보 찾기 만약 있다면 에러 발생
         userRepository.findByUserName(userName).ifPresent(it -> {
             throw new SnsApplicationException();
         });
 
-        userRepository.save(new User());
-        return new User();
+        User user = userRepository.save(User.of(userName, pw));
+        return UserDto.from(user);
     }
 
     // Todo : implement
