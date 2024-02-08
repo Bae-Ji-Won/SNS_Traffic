@@ -1,0 +1,17 @@
+spring.jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+            hibernate:
+              dialect: org.hibernate.dialect.PostgreSQLDialect
+              format_sql: true
+
+
+# heroku에 postgresql DB 설치후 해당 설정에서 url : host + database,username, password값을 가져옴
+spring.datasource:
+    hikari.maximum-pool-size: 4
+    url: ${LOCAL_DB_URL}
+    username: ${LOCAL_DB_USERNAME}
+    password: ${LOCAL_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
