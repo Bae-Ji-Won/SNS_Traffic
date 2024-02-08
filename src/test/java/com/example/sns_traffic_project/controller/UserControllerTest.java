@@ -1,8 +1,10 @@
 package com.example.sns_traffic_project.controller;
 
+import com.example.sns_traffic_project.dto.UserDto;
 import com.example.sns_traffic_project.dto.request.UserJoinRequest;
 import com.example.sns_traffic_project.dto.request.UserLoginRequest;
 import com.example.sns_traffic_project.domain.User;
+import com.example.sns_traffic_project.exception.ErrorCode;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +43,7 @@ class UserControllerTest {
         String userName = "";
         String password = "";
 
-        when(userService.join(userName,password)).thenReturn(mock(User.class));
+        when(userService.join(userName,password)).thenReturn(mock(UserDto.class));
 
         mockMvc.perform(post("/api/v1/users/join")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +58,7 @@ class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.join(userName,password)).thenThrow(new SnsApplicationException());
+        when(userService.join(userName,password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,String.format("%s is duplicated",userName)));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +90,7 @@ class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.login(userName,password)).thenThrow(new SnsApplicationException());
+        when(userService.login(userName,password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,String.format("%s is duplicated",userName)));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +105,7 @@ class UserControllerTest {
         String userName = "userName";
         String password = "password";
 
-        when(userService.login(userName,password)).thenThrow(new SnsApplicationException());
+        when(userService.login(userName,password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME,""));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
