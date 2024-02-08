@@ -2,11 +2,6 @@ package com.example.sns_traffic_project.dto;
 
 import com.example.sns_traffic_project.domain.User;
 import com.example.sns_traffic_project.domain.constant.UserRole;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public record UserDto (
@@ -24,9 +19,14 @@ public record UserDto (
         return new UserDto(userId, userName,password, role, null, userName, null, userName);
     }
 
+//    public static UserDto of(Long userId,String userName, String password, UserRole role) {
+//        return new UserDto(userId, userName,password, role,  userName,  userName);
+//    }
+
     public static UserDto of(Long userId,String userName, String password,UserRole role,LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new UserDto(userId, userName,password, role, createdAt, userName, updatedAt, userName);
     }
+
 
     // Todo : entity -> dto
     public static UserDto from(User user){

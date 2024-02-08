@@ -1,6 +1,7 @@
 package com.example.sns_traffic_project.domain;
 
 import com.example.sns_traffic_project.domain.constant.UserRole;
+//import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,10 +12,13 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "\"user\"",
+        indexes = {
+                @Index(columnList = "createdAt"),
+                @Index(columnList = "createdBy")}
+)
 @Getter
 @ToString(callSuper = true)
-@Setter
 @SQLDelete(sql = "UPDATED \"user\" SET deleted_at = NOW() where id=?")      // jpa에서 delete사용하여 delete 쿼리문 동작 시 자동으로 user DB에 deletedAt칸에는 현재 시간이 자동으로 들어감
 @Where(clause = "deleted_at is NULL")       // where문 쿼리 동작 시 deletedAt이 null인 값 즉, 아직 삭제되지 않은 정보만 가져옴
 public class User extends AuditingFields{
