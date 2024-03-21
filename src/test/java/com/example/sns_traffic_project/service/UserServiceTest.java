@@ -1,6 +1,7 @@
 package com.example.sns_traffic_project.service;
 
 import com.example.sns_traffic_project.domain.User;
+import com.example.sns_traffic_project.exception.ErrorCode;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.fixture.UserFixture;
 import com.example.sns_traffic_project.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -24,6 +26,8 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private BCryptPasswordEncoder encoder;
 
 
 
@@ -36,7 +40,8 @@ class UserServiceTest {
         User userFixture = UserFixture.get(userName,password);
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(Optional.of(userFixture));
+        when(encoder.encode(password)).thenReturn("encrpy_password");
+        when(userRepository.save(any())).thenReturn(userFixture);
 
         Assertions.assertDoesNotThrow(() -> userService.join(userName,password));
     }
@@ -50,8 +55,10 @@ class UserServiceTest {
         User userFixture = UserFixture.get(userName,password);
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.empty());
+        when(encoder.encode(password)).thenReturn("encrpy_password");
         when(userRepository.save(any())).thenReturn(Optional.of(userFixture));
 
+        when(userService.join(userName,password)).thenThrow(new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME));
         Assertions.assertThrows(SnsApplicationException.class, () -> userService.join(userName,password));
     }
 
@@ -64,6 +71,8 @@ class UserServiceTest {
         User userFixture = UserFixture.get(userName,password);
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.of(userFixture));
+        when(encoder.matches(password,userFixture.getPassword())).thenReturn(true);
+
         Assertions.assertDoesNotThrow(() -> userService.login(userName,password));
     }
 
@@ -73,10 +82,15 @@ class UserServiceTest {
         String userName = "userName";
         String password = "password";
 
+        User userFixture = UserFixture.get(userName,password);
 
         when(userRepository.findByUserName(userName)).thenReturn(Optional.empty());
+        when(encoder.matches(password,userFixture.getPassword())).thenReturn(true);
+        when(userRepository.save(any())).thenReturn(Optional.of(userFixture));
 
-        Assertions.assertThrows(SnsApplicationException.class, () -> userService.login(userName,password));
+        SnsApplicationException e = Assertions.assertThrows(SnsApplicationException.class, () -> userService.login(userName,password));
+
+        Assertions.assertEquals(ErrorCode.DUPLICATED_USER_NAME,e.getErrorCode());
     }
 
     @Test
@@ -92,4 +106,5 @@ class UserServiceTest {
 
         Assertions.assertThrows(SnsApplicationException.class, () -> userService.login(userName,password));
     }
+
 }
