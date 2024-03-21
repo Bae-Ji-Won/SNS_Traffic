@@ -15,3 +15,10 @@ spring.datasource:
     username: ${LOCAL_DB_USERNAME}
     password: ${LOCAL_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+
+jwt:
+  secret-key: ${SECRET_KEY}
+  # 30 days = 24*60*60*30
+  token:
+    expired-time-ms:  2592000000
