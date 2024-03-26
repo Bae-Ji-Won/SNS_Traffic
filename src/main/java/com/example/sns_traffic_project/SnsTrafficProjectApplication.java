@@ -2,7 +2,6 @@ package com.example.sns_traffic_project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 
 //@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
