@@ -1,7 +1,7 @@
 package com.example.sns_traffic_project.service;
 
 
-import com.example.sns_traffic_project.domain.User;
+import com.example.sns_traffic_project.domain.entity.User;
 import com.example.sns_traffic_project.dto.UserDto;
 import com.example.sns_traffic_project.exception.ErrorCode;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
@@ -16,17 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class UserService {
+public class UserService{
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder encoder;
-
 
     @Value("${jwt.secret-key}")
     private String secretKey;
 
     @Value("${jwt.token.expired-time-ms}")
     private Long expiredTimeMs;
+
+
+    // UserDetailsService 클래스를 상속받아서 해당 클래스 안에 있는 loadUserByUsername메서드를 가져와 UserName을 비교하는 방법이 있으나 직접 메서드를 만들어 보겠음
+    public User loadUserByUserName(String userName){
+        return userRepository.findByUserName(userName).orElseThrow(() ->
+                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded",userName)));
+    }
 
     public UserDto join(String userName, String pw) {
         // 유저 이름을 통한 정보 찾기 만약 있다면 에러 발생
