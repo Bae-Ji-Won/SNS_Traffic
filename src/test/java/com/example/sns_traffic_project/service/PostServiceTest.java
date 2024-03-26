@@ -1,7 +1,7 @@
 package com.example.sns_traffic_project.service;
 
-import com.example.sns_traffic_project.domain.Post;
-import com.example.sns_traffic_project.domain.User;
+import com.example.sns_traffic_project.domain.entity.Post;
+import com.example.sns_traffic_project.domain.entity.User;
 import com.example.sns_traffic_project.exception.ErrorCode;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.repository.PostRepository;

@@ -3,7 +3,6 @@ package com.example.sns_traffic_project.controller;
 import com.example.sns_traffic_project.dto.UserDto;
 import com.example.sns_traffic_project.dto.request.UserJoinRequest;
 import com.example.sns_traffic_project.dto.request.UserLoginRequest;
-import com.example.sns_traffic_project.domain.User;
 import com.example.sns_traffic_project.exception.ErrorCode;
 import com.example.sns_traffic_project.exception.SnsApplicationException;
 import com.example.sns_traffic_project.service.UserService;
